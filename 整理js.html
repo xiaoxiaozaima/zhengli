@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	
+</body>
+<script type="text/javascript">
+1阻止默认事件
+	document.oncontextmenu=function  (ev) {
+		var e=ev||window.event;
+		if (e.preventDefault) {
+			e.preventDefault();//w3c阻止默认动作
+		} else{
+			e.returnValue=false;//IE阻止默认动作
+		};
+
+		alert("不能使用鼠标右键");
+	}
+2随机数
+	var r=Math.floor(Math.random()*256);
+3事件传播  冒泡
+li1.addEventListener('click',function  (ev) {
+		var e=ev||window.event;
+		if (e.stopPropagation) {
+			e.stopPropagation();//w3c标准阻止事件传播
+		} else{
+			e.cancelBubble=true;//ie浏览器阻止事件冒泡
+		};
+		alert('点击的是li标签');
+	},true)
+
+offsetParent指向离它最近的定位父级
+
+4事件委托
+在FireFox中获得触发事件的元素（事件源）可以用：event.target
+在IE中获得触发事件的元素（事件源）可以用：event.srcElement
+list.onmouseover=function  (ev) {
+		var e=ev||window.event;
+		var target=e.target||e.srcElement;
+		// if (target.nodeName!='UL') {
+		// 	target.style.background='green';
+		// };
+	}
+
+
+var event=ev||window.event;
+// 在mouseover事件中，它指向鼠标来自哪个元素
+var from=event.relatedTarget||event.fromElement;
+
+
+var event=ev||window.event;
+// 在mouseout事件中，它指向鼠标去往的那个元素
+var to=event.relatedTarget||event.toElement;
+
+
+5当前时间
+var con=document.getElementById('con');
+	setInterval(function  () {
+		var Now=new Date();
+		var year=Now.getFullYear();
+		var month=Now.getMonth();
+		var date=Now.getDate();
+		var xq=Now.getDay();
+		var hour=Now.getHours();
+		var minute=Now.getMinutes();
+		var second=Now.getSeconds();
+		var milliSecond=Now.getMilliseconds();
+		if (hour<10) {
+			hour='0'+hour;
+		};
+		if (minute<10) {
+			minute='0'+minute;
+		};
+		if (second<10) {
+			second='0'+second;
+		};
+		var arr=['星期日','星期一','星期二','星期三','星期四','星期五','星期六',];
+		con.innerHTML="当前的北京时间是："+year+'年'+(month+1)+'月'+date+'日'+arr[xq]+hour+'时'+minute+'分'+second+'秒'+milliSecond+'毫秒';
+	},1)
+
+	到记时
+	var end=new Date("2016,10,1")
+	var endtime=end.getTime();//2016年10月1日到1970.1.1总毫秒数
+
+	setInterval(function  () {
+		var start=new Date();
+		var startTime=start.getTime();//当前时间到1970.1.1总毫秒数
+
+		var sy=endtime-startTime;
+		console.log(sy);
+
+		var tian=parseInt(sy/(1000*60*60*24));//剩余天数
+		console.log(tian);
+		var sy1=sy%(1000*60*60*24);//去掉天数之后剩余的毫秒数
+		var xs=parseInt(sy1/(1000*60*60));//剩余小时数
+		var sy2=sy1%(1000*60*60)//去掉小时之后剩余毫秒数
+		var fen=parseInt(sy2/(1000*60));//剩余分钟数
+		var sy3=sy2%(1000*60);//去掉分钟之后剩余的毫秒数;
+		var miao=parseInt(sy3/1000);//剩余秒数;
+		var hm=sy3%1000;//剩余毫秒数
+		if (xs<10) {
+			xs='0'+xs;
+		};
+		if (fen<10) {
+			fen='0'+fen;
+		};
+		if (miao<10) {
+			miao='0'+miao;
+		};
+		con.innerHTML='距离2016年国庆节还有：'+tian+'天'+xs+'小时'+fen+'分'+miao+'秒'+hm+'毫秒';
+	},1)
+	
+
+	6类名
+	function byclass3(classn){//全局获取类
+	var tags=document.all ? document.all : document.getElementsByTagName('*');
+	var arr=[];
+	// var reg=/\bclassn\b/g;//此处不能放变量
+	var reg=new RegExp('\\b'+classn+'\\b','g');
+	for (var i = 0; i < tags.length; i++) {
+		//可获取有多个类名的元素,也可以有相似类名
+		reg.lastIndex=0;
+		if (reg.test(tags[i].className)) {
+			arr.push(tags[i]);
+		}
+	};
+	return arr;
+}
+去除名感字
+	var reg=/中国|日本|共产党|习近平/g;
+	btn.onclick=function  () {
+		con.innerHTML=txt.value.replace(reg,function  (x) {//中国 日本 共产党 习近平
+				var a='';
+				for (var i = 0; i < x.length; i++) {
+					a=a+'*';
+				};
+				return a;
+		})
+		txt.value='';
+	}
+
+	正则检测账号
+	var reg=/\s+/g;
+	提交 sub.onclick=function  () {
+		//检测账号
+		var flag=false;
+		if (reg.test(user.value)) {
+			alert('对不起不能含有空格');
+			flag=true;
+		} else{
+			var userReg=/^([a-zA-Z0-9]){8,16}$/g;
+			if (userReg.test(user.value)) {
+				user.className='green';
+			} else{
+				user.className='red';
+				flag=true;
+			};
+		};
+		//检测密码
+		if (reg.test(pass.value)) {
+			alert('对不起不能含有空格');
+			flag=true;
+		} else{
+			var passReg=/^\w{6,16}$/g;
+			if (passReg.test(pass.value)) {
+				pass.className='green';
+			} else{
+				pass.className='red';
+				flag=true;
+			};
+		};
+
+		//检测确认密码
+		if (qr.value==pass.value) {
+			qr.className='green';
+		} else{
+			qr.className='red';
+			flag=true;
+		};
+		//检测昵称
+		if (reg.test(nc.value)) {
+			alert('对不起不能含有空格');
+			flag=true;
+		} else{
+			var ncReg=/^.{2,14}$/g;
+			if (ncReg.test(nc.value)) {
+				nc.className='green';
+			} else{
+				nc.className='red';
+				flag=true;
+			};
+		};
+		if (flag) {
+			return false;
+		};
+
+	}
+
+
+	7cookie函数
+	function setCookie (key,value,days) {
+			var date=new Date();
+			date.setDate(date.getDate()+days);
+			document.cookie=key+"="+escape(value)+"; expires="+date;
+		}
+		function getCookie (key) {
+			var arr=document.cookie.split('; ');
+			for (var i = 0; i < arr.length; i++) {
+				var arr1=arr[i].split('=');
+				if (arr1[0]==key) {
+					return unescape(arr1[1]);
+				};
+			};
+			return false;
+		}
+		function removeCookie (key) {
+			setCookie (key,'0',-1);
+		}
+
+
+
+</script>
+</html>
